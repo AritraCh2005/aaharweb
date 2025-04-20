@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# 🍽️ Aahar — Restaurant Web App
 
-First, run the development server:
+Welcome to **Aahar**, a modern food ordering web app built with **Next.js 14**, designed for restaurants to manage menus, orders, and users with an intuitive admin dashboard.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- 🧑‍💼 **Admin Dashboard** for managing menu items
+- 🍔 **Menu Display** with images, names, and prices
+- 🔐 **User Authentication** using `next-auth` (Google & credentials)
+- 📦 **MongoDB Integration** for storing menu items and user data
+- ✏️ **Editable Menu Items** with image uploads
+- 💬 **Toasts & Alerts** for smooth UX
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🔧 Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework**: [Next.js 14](https://nextjs.org/)
+- **Styling**: Tailwind CSS
+- **Authentication**: next-auth
+- **Database**: MongoDB + Mongoose
+- **Image Uploads**: EditableImage component with file input
+- **Hosting**: [Render](https://render.com) / Vercel / any Node.js-compatible platform
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**For full experience admin dashboard has been opened for all to update...** 
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
