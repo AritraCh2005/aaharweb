@@ -104,119 +104,119 @@
 //   );
 // }
 
-// "use client";
+"use client";
 
-// import { useProfile } from "../UseProfile";
-// import EditableImage from "./EditableImage";
-// import { useState } from "react";
-// import AddressInputs from "../layout/AddressInputs";
-// import { useEffect } from "react";
+import { useProfile } from "../UseProfile";
+import EditableImage from "./EditableImage";
+import { useState } from "react";
+import AddressInputs from "../layout/AddressInputs";
+import { useEffect } from "react";
 
-// export default function UserForm({ user, onSave }) {
-//   const [image, setImage] = useState(user?.image || "");
-//   const [userName, setUserName] = useState(user?.name || "");
-//   const [phone, setPhone] = useState(user?.phone || "");
-//   const [streetAddress, setStreetAddress] = useState(user?.streetAddress || "");
-//   const [city, setCity] = useState(user?.city || "");
-//   const [country, setCountry] = useState(user?.country || "");
-//   const [postalCode, setPostalCode] = useState(user?.postalCode || "");
-//   const [admin, setAdmin] = useState(user?.admin || false);
+export default function UserForm({ user, onSave }) {
+  const [image, setImage] = useState(user?.image || "");
+  const [userName, setUserName] = useState(user?.name || "");
+  const [phone, setPhone] = useState(user?.phone || "");
+  const [streetAddress, setStreetAddress] = useState(user?.streetAddress || "");
+  const [city, setCity] = useState(user?.city || "");
+  const [country, setCountry] = useState(user?.country || "");
+  const [postalCode, setPostalCode] = useState(user?.postalCode || "");
+  const [admin, setAdmin] = useState(user?.admin || false);
 
-//   function handleAddressChange(propName, value) {
-//     if (propName === "city") setCity(value);
-//     if (propName === "country") setCountry(value);
-//     if (propName === "postalCode") setPostalCode(value);
-//     if (propName === "streetAddress") setStreetAddress(value);
-//     if (propName === "phone") setPhone(value);
-//   }
+  function handleAddressChange(propName, value) {
+    if (propName === "city") setCity(value);
+    if (propName === "country") setCountry(value);
+    if (propName === "postalCode") setPostalCode(value);
+    if (propName === "streetAddress") setStreetAddress(value);
+    if (propName === "phone") setPhone(value);
+  }
 
-//   const { data: loggedInUserData } = useProfile();
+  const { data: loggedInUserData } = useProfile();
 
-//   useEffect(() => {
-//     if (user) {
-//       setImage(user.image || "");
-//       setUserName(user.name || "");
-//       setPhone(user.phone || "");
-//       setStreetAddress(user.streetAddress || "");
-//       setCity(user.city || "");
-//       setCountry(user.country || "");
-//       setPostalCode(user.postalCode || "");
-//       setAdmin(user.admin || false);
-//     }
-//   }, [user]);
+  useEffect(() => {
+    if (user) {
+      setImage(user.image || "");
+      setUserName(user.name || "");
+      setPhone(user.phone || "");
+      setStreetAddress(user.streetAddress || "");
+      setCity(user.city || "");
+      setCountry(user.country || "");
+      setPostalCode(user.postalCode || "");
+      setAdmin(user.admin || false);
+    }
+  }, [user]);
 
-//   const handleSubmit = (ev) => {
-//     ev.preventDefault();
-//     onSave(ev, {
-//       name: userName,
-//       phone,
-//       streetAddress,
-//       city,
-//       country,
-//       postalCode,
-//       image,
-//       admin,
-//     });
-//   };
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+    onSave(ev, {
+      name: userName,
+      phone,
+      streetAddress,
+      city,
+      country,
+      postalCode,
+      image,
+      admin,
+    });
+  };
 
-//   return (
-//     <>
-//     <div
-//       className="flex gap-4 items-center bg-cover bg-center p-6 rounded-lg"
-//       style={{
-//         backgroundImage: "url('/FormBg.jpg')",
-//         backgroundSize: "cover",
-//         backgroundPosition: "center",
-//       }}
-//     >
-//     <div className="gap-4 items-center">
-//       <div>
-//         <div className="rounded-lg">
-//           <EditableImage link={image} setLink={setImage} />
-//         </div>
-//       </div>
-//       <form className="grow" onSubmit={handleSubmit}>
-//         <input
-//           type="text"
-//           placeholder="First and last name"
-//           value={userName}
-//           onChange={(e) => setUserName(e.target.value)}
-//         />
-//         <input type="email" value={user?.email || ""} disabled />
-//         {/* <input type="tel" placeholder="Phone number" value={phone} onChange={(e) => setPhone(e.target.value)} />
-//         <input type="text" placeholder="Street Address" value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} />
-//         <div className="flex gap-4">
-//           <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
-//           <input type="text" placeholder="Postal Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
-//         </div>
-//         <input type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} /> */}
+  return (
+    <>
+    <div
+      className="flex gap-4 items-center bg-cover bg-center p-6 rounded-lg"
+      style={{
+        backgroundImage: "url('/FormBg.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+    <div className="gap-4 items-center">
+      <div>
+        <div className="rounded-lg">
+          <EditableImage link={image} setLink={setImage} />
+        </div>
+      </div>
+      <form className="grow" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="First and last name"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+        />
+        <input type="email" value={user?.email || ""} disabled />
+        {/* <input type="tel" placeholder="Phone number" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <input type="text" placeholder="Street Address" value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} />
+        <div className="flex gap-4">
+          <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
+          <input type="text" placeholder="Postal Code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
+        </div>
+        <input type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} /> */}
 
-//         <AddressInputs
-//           addressProps={{ phone, streetAddress, city, postalCode, country }}
-//           phone={phone}
-//           streetAddress={streetAddress}
-//           city={city}
-//           postalCode={postalCode}
-//           country={country}
-//           setAddressProp={handleAddressChange}
-//         />
-//         {loggedInUserData?.admin && (
-//           <label className="p-2 inline-flex items-center gap-2 border mb-2 bg-red-600 text-white">
-//             <input
-//               type="checkbox"
-//               checked={admin}
-//               onChange={(e) => setAdmin(e.target.checked)}
-//             />
-//             <span>Admin</span>
-//           </label>
-//          )} 
-//         <button type="submit">Save</button>
-//       </form>
-//     </div>
-//     </div>
-//     </>
-//   );
-// }
+        <AddressInputs
+          addressProps={{ phone, streetAddress, city, postalCode, country }}
+          phone={phone}
+          streetAddress={streetAddress}
+          city={city}
+          postalCode={postalCode}
+          country={country}
+          setAddressProp={handleAddressChange}
+        />
+        {loggedInUserData?.admin && (
+          <label className="p-2 inline-flex items-center gap-2 border mb-2 bg-red-600 text-white">
+            <input
+              type="checkbox"
+              checked={admin}
+              onChange={(e) => setAdmin(e.target.checked)}
+            />
+            <span>Admin</span>
+          </label>
+         )} 
+        <button type="submit">Save</button>
+      </form>
+    </div>
+    </div>
+    </>
+  );
+}
 
 // "use client"
 
@@ -356,132 +356,3 @@
 //   )
 // }
 
-"use client"
-
-import { useProfile } from "../UseProfile"
-import EditableImage from "./EditableImage"
-import { useState, useEffect } from "react"
-import AddressInputs from "../layout/AddressInputs"
-import { Button } from "../../components/ui/button"
-import { Input } from "../../components/ui/input"
-import { Label } from "../../components/ui/label"
-import { Checkbox } from "../../components/ui/checkbox"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-export default function UserForm({ user, onSave }) {
-  const [image, setImage] = useState(user?.image || "")
-  const [userName, setUserName] = useState(user?.name || "")
-  const [phone, setPhone] = useState(user?.phone || "")
-  const [streetAddress, setStreetAddress] = useState(user?.streetAddress || "")
-  const [city, setCity] = useState(user?.city || "")
-  const [country, setCountry] = useState(user?.country || "")
-  const [postalCode, setPostalCode] = useState(user?.postalCode || "")
-  const [admin, setAdmin] = useState(user?.admin || false)
-
-  function handleAddressChange(propName, value) {
-    if (propName === "city") setCity(value)
-    if (propName === "country") setCountry(value)
-    if (propName === "postalCode") setPostalCode(value)
-    if (propName === "streetAddress") setStreetAddress(value)
-    if (propName === "phone") setPhone(value)
-  }
-
-  const { data: loggedInUserData } = useProfile()
-
-  useEffect(() => {
-    if (user) {
-      setImage(user.image || "")
-      setUserName(user.name || "")
-      setPhone(user.phone || "")
-      setStreetAddress(user.streetAddress || "")
-      setCity(user.city || "")
-      setCountry(user.country || "")
-      setPostalCode(user.postalCode || "")
-      setAdmin(user.admin || false)
-    }
-  }, [user])
-
-  const handleSubmit = (ev) => {
-    ev.preventDefault()
-    onSave(ev, {
-      name: userName,
-      phone,
-      streetAddress,
-      city,
-      country,
-      postalCode,
-      image,
-      admin,
-    })
-  }
-
-  return (
-    <div className="w-full max-w-4xl mx-auto">
-      <Card className="border-none shadow-lg overflow-hidden">
-        <div
-          className="h-32 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/FormBg.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <CardHeader className="pb-0">
-          <CardTitle className="text-2xl font-bold text-center">Profile Information</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md -mt-16 bg-white">
-                <EditableImage link={image} setLink={setImage} />
-              </div>
-            </div>
-            <form className="flex-1 space-y-4" onSubmit={handleSubmit}>
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="First and last name"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  className="w-full"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={user?.email || ""} disabled className="w-full bg-gray-50" />
-              </div>
-
-              <AddressInputs
-                addressProps={{ phone, streetAddress, city, postalCode, country }}
-                phone={phone}
-                streetAddress={streetAddress}
-                city={city}
-                postalCode={postalCode}
-                country={country}
-                setAddressProp={handleAddressChange}
-              />
-
-              {loggedInUserData?.admin && (
-                <div className="flex items-center space-x-2 p-3 rounded-md bg-red-50 border border-red-200">
-                  <Checkbox id="admin" checked={admin} onCheckedChange={(checked) => setAdmin(checked)} />
-                  <Label htmlFor="admin" className="font-medium text-red-600 cursor-pointer">
-                    Admin privileges
-                  </Label>
-                </div>
-              )}
-
-              <div className="pt-4">
-                <Button type="submit" className="w-full md:w-auto">
-                  Save Profile
-                </Button>
-              </div>
-            </form>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
