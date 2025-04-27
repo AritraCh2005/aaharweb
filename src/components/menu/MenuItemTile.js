@@ -1,75 +1,71 @@
-// export default function MenuItemTile({onAddToCart,...item}) {
-//     const {name, basePrice, image, description,
-//       sizes,extraIngredientPrices
-//     } = item;
+"use client"
 
-//     const hasSizesOrExtras = sizes.length > 0 || extraIngredientPrices.length > 0;
-//     return(
-//         <div className="p-4 border rounded shadow">
-//         <img
-//           src={image}
-//           alt="Item"
-//           className="w-full h-32 object-cover rounded"
-//         />
-//         <h3 className="text-lg font-bold mt-2">{name}</h3>
-//         <p className="text-sm text-gray-600 line-clamp-3">{description}</p>
-//         <button
-//           type="button"
-//           onClick={onAddToCart}
-//           className="mt-4 bg-red-500 text-white rounded-full px-8 py-2"
-//         >
-//           {(hasSizesOrExtras) ? (
-//             <span> From ${basePrice} onwards...</span>
-//           ):(
-//             <span>Add to Cart ${basePrice}</span>
-//           )}
-         
-//         </button>
-//       </div>
-//     );
-// }
+import { ShoppingCart, ChevronRight } from "lucide-react"
+import Image from "next/image"
 
 export default function MenuItemTile({ onAddToCart, ...item }) {
-  const {
-    name,
-    basePrice,
-    image,
-    description,
-    sizes,
-    extraIngredientPrices,
-  } = item;
+  const { name, basePrice, image, description, sizes, extraIngredientPrices } = item
 
-  const hasSizesOrExtras = sizes.length > 0 || extraIngredientPrices.length > 0;
+  const hasSizesOrExtras = sizes?.length > 0 || extraIngredientPrices?.length > 0
 
   return (
-    <div
-      className="p-6 border rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-cover bg-center text-white"
-      style={{
-        backgroundImage: "url('/texture-wooden-boards.jpg')",
-      }}
-    >
-      <div className="relative bg-white bg-opacity-80 rounded-lg p-4 shadow-md">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-40 object-cover rounded-lg"
+    <div className="group relative rounded-xl transition-all duration-300 hover:shadow-xl w-96 sm:w-104 md:w-128 flex flex-col"> {/* Increased width */}
+      {/* Food image with gradient overlay */}
+      <div className="relative h-64 w-full overflow-hidden rounded-t-xl">
+        <Image
+          src={image || "/placeholder.svg"}
+          alt={name || "Food item"}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        <div className="mt-4">
-          <h3 className="text-xl font-bold text-gray-800">{name}</h3>
-          <p className="text-sm text-gray-600 mt-2 line-clamp-3">{description}</p>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+
+        {/* Price tag */}
+        <div className="absolute top-3 right-3 max-w-[50%]">
+          <div className="rounded-full bg-white px-3 py-1 text-sm font-bold text-orange-600 shadow-md truncate">
+            {hasSizesOrExtras ? `From $${basePrice}` : `$${basePrice}`}
+          </div>
         </div>
-        <button
-          type="button"
-          onClick={onAddToCart}
-          className="mt-4 w-full bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors duration-200"
-        >
-          {hasSizesOrExtras ? (
-            <span>From ${basePrice} onwards...</span>
-          ) : (
-            <span>Add to Cart - ${basePrice}</span>
-          )}
-        </button>
+
+        {/* Item badges */}
+        {hasSizesOrExtras && (
+          <div className="absolute top-3 left-3">
+            <div className="rounded-full bg-orange-500 px-2 py-0.5 text-xs font-medium text-white">
+              {sizes?.length > 0 ? "Multiple sizes" : "Customizable"}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col flex-grow bg-white p-4 rounded-b-xl">
+        <h3 className="text-lg font-bold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
+          {name}
+        </h3>
+
+        <p className="mt-1 text-sm text-gray-600 line-clamp-2 min-h-[3rem]">{description}</p>
+
+        <div className="mt-3 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={onAddToCart}
+            className="flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-orange-600 hover:shadow-md"
+          >
+            {hasSizesOrExtras ? (
+              <>
+                <span>Choose options</span>
+                <ChevronRight size={16} />
+              </>
+            ) : (
+              <>
+                <ShoppingCart size={16} />
+                <span>Add to cart</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
-  );
+  )
 }

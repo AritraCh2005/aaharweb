@@ -65,7 +65,7 @@ export default function Home() {
       </div>
 
       {/* Menu section with enhanced styling */}
-      <div className="bg-gradient-to-b from-yellow-50/30 to-white py-8">
+      <div className="bg-gradient-to-b from-yellow-50/30 to-white py-8 px-12">
         <HomeMenu />
       </div>
 
