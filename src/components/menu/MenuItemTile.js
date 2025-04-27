@@ -9,7 +9,8 @@ export default function MenuItemTile({ onAddToCart, ...item }) {
   const hasSizesOrExtras = sizes?.length > 0 || extraIngredientPrices?.length > 0
 
   return (
-    <div className="group relative rounded-xl transition-all duration-300 hover:shadow-xl w-96 sm:w-104 md:w-128 flex flex-col"> {/* Increased width */}
+    <div className="group relative rounded-xl transition-all duration-300 hover:shadow-xl w-full max-w-xs sm:max-w-sm md:max-w-md flex flex-col">
+ {/* Increased width */}
       {/* Food image with gradient overlay */}
       <div className="relative h-64 w-full overflow-hidden rounded-t-xl">
         <Image
