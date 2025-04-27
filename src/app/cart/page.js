@@ -41,7 +41,7 @@ export default function CartPage() {
 
   if (!cartProducts?.length) {
     return (
-      <div className="bg-white min-h-[60vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-[60vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <div className="bg-gray-100 p-6 rounded-full inline-block mb-4">
             <ShoppingCart size={64} className="text-gray-400" />
@@ -60,11 +60,11 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-gray-50 py-12">
+    <div className=" py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">Your Cart</h1>
-          <p className="mt-2 text-lg text-gray-600">Review your items and checkout when you're ready</p>
+          <h1 className="text-3xl font-extrabold text-yellow-400 sm:text-4xl font-serif ">Your Cart</h1>
+          <p className="mt-2 text-lg text-green-500 ">Review your items and checkout when you're ready</p>
         </div>
 
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
@@ -72,7 +72,7 @@ export default function CartPage() {
           <section className="lg:col-span-7">
             <div className="bg-white shadow-sm rounded-lg mb-8">
               <div className="px-4 py-6 sm:px-6">
-                <h2 className="text-lg font-medium text-gray-900">Cart Items ({cartProducts.length})</h2>
+                <h2 className="text-lg  font-bold text-gray-900">Cart Items ({cartProducts.length})</h2>
               </div>
               <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                 <ul role="list" className="divide-y divide-gray-200">
@@ -114,13 +114,7 @@ export default function CartPage() {
 
                         <div className="flex-1 flex items-end justify-between text-sm">
                           <div className="flex items-center space-x-2">
-                            <button className="text-gray-400 hover:text-gray-500 p-1 rounded-full hover:bg-gray-100 transition-colors">
-                              <Minus size={16} />
-                            </button>
-                            <span className="font-medium text-gray-700">1</span>
-                            <button className="text-gray-400 hover:text-gray-500 p-1 rounded-full hover:bg-gray-100 transition-colors">
-                              <Plus size={16} />
-                            </button>
+                            
                           </div>
 
                           <div className="flex">
@@ -142,7 +136,7 @@ export default function CartPage() {
             </div>
 
             <div className="bg-white shadow-sm rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Order Notes</h2>
+              <h2 className="text-lg font-serif font-bold text-gray-900 mb-4">Order Notes</h2>
               <textarea
                 rows={3}
                 className="shadow-sm block w-full focus:ring-orange-500 focus:border-orange-500 sm:text-sm border border-gray-300 rounded-md p-2"
