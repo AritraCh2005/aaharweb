@@ -284,29 +284,31 @@
 // }
 
 
-"use client"
-import { useSession, signOut } from "next-auth/react"
-import Link from "next/link"
-import { useContext, useState } from "react"
-import { CartContext } from "../AppContext"
-import { ShoppingCart, User, Menu, X } from "lucide-react"
-import Image from "next/image"
+"use client";
+
+import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
+import { useContext, useState } from "react";
+import { CartContext } from "../AppContext";
+import { ShoppingCart, User, Menu, X } from "lucide-react";
+import Image from "next/image";
 
 export default function Headers() {
-  const session = useSession()
-  const status = session?.status
-  const userData = session.data?.user
-  let userName = userData?.name || userData?.email
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { cartProducts } = useContext(CartContext)
+  const { data: sessionData, status } = useSession();
+  const userData = sessionData?.user;
+  let userName = userData?.name || userData?.email;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { cartProducts } = useContext(CartContext);
 
   if (userName && userName.includes(" ")) {
-    userName = userName.split(" ")[0]
+    userName = userName.split(" ")[0];
   }
 
+  // build the dynamic profile URL
+  const profileHref = userData ? `/users/${userData.id}` : "/login";
+
   return (
-    <header className="bg-gradient-to-r from-green-900 to-green-800 text-white shadow-lg sticky top-0 z-50 left-20">
-      {/* Constrain to max-width and add side padding */}
+    <header className="bg-gradient-to-r from-green-900 to-green-800 text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-8">
         <div className="flex items-center justify-between py-4">
           {/* Logo & Brand */}
@@ -350,7 +352,7 @@ export default function Headers() {
             {status === "authenticated" ? (
               <>
                 <Link
-                  href="/profile"
+                  href={profileHref}
                   className="flex items-center gap-2 px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
                 >
                   <User size={18} />
@@ -434,7 +436,7 @@ export default function Headers() {
               {status === "authenticated" ? (
                 <>
                   <Link
-                    href="/profile"
+                    href={profileHref}
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center gap-2 px-4 py-3 rounded-md hover:bg-green-700 transition-colors"
                   >
@@ -443,8 +445,8 @@ export default function Headers() {
                   </Link>
                   <button
                     onClick={() => {
-                      signOut()
-                      setMobileMenuOpen(false)
+                      signOut();
+                      setMobileMenuOpen(false);
                     }}
                     className="bg-yellow-500 hover:bg-yellow-600 text-green-900 font-medium px-4 py-3 rounded-md transition-colors"
                   >
@@ -474,5 +476,6 @@ export default function Headers() {
         )}
       </div>
     </header>
-  )
+  );
 }
+

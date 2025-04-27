@@ -2,17 +2,23 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { User, ListIcon as Category, Menu, Users } from "lucide-react"
 
 export default function UserTabs({ isAdmin }) {
   const path = usePathname()
+  const { data: session } = useSession()
+  const userId = session?.user?.id
+
+  // Build dynamic profile href
+  const profileHref = userId ? `/users/${userId}` : "/login"
 
   const tabs = [
     {
       label: "Profile",
-      href: "/profile",
+      href: profileHref,
       icon: User,
-      active: path === "/profile",
+      active: ["/profile", `/users/${userId}`].includes(path),
     },
     {
       label: "Categories",
@@ -40,8 +46,8 @@ export default function UserTabs({ isAdmin }) {
   return (
     <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8">
       {tabs.map((tab) => {
-        // Comment out the isAdmin check as requested, but keep it in code
-        // if (tab.admin && !isAdmin) return null;
+        // Uncomment to enforce admin check
+        // if (tab.admin && !isAdmin) return null
         return (
           <Link
             key={tab.href}
