@@ -92,7 +92,6 @@ export default function MenuItemsPage() {
             href={"/menu-items/new"}
           >
             <div>Create New Item</div>
-            <Right className="ml-2" />
           </Link>
         </div>
       </section>
