@@ -93,7 +93,7 @@ export default function Hero() {
           </div>
 
           {/* Image block */}
-          <div className="md:w-1/2 flex justify-center md:justify-center">
+          <div className="md:w-1/2 flex justify-center md:justify-center mt-4">
             <div className="relative w-[300px] h-[300px] md:w-[380px] md:h-[380px]">
               {/* Glow layers */}
               <div className="absolute inset-0 rounded-full bg-yellow-400/20 -z-10"></div>
