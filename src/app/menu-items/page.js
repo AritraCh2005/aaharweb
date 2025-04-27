@@ -43,7 +43,8 @@ export default function MenuItemsPage() {
     <>
       <UserTabs />
 
-      <section className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Items Section */}
+      <section className="mt-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-4">
           <h2 className="text-2xl font-semibold text-gray-800">
             Edit Menu Items
@@ -52,13 +53,14 @@ export default function MenuItemsPage() {
             Manage your menu items here. Click on an item to edit.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {menuItems.length > 0 &&
             menuItems.map((item) => (
               <Link
                 href={`/menu-items/edit/${item._id}`}
                 key={item._id}
-                className="block rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
+                className="block rounded-lg overflow-hidden shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300 bg-white"
               >
                 <div className="relative">
                   <Image
@@ -69,7 +71,7 @@ export default function MenuItemsPage() {
                     height={150}
                   />
                 </div>
-                <div className="p-4 bg-white">
+                <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">
                     {item.name}
                   </h3>
@@ -82,13 +84,14 @@ export default function MenuItemsPage() {
         </div>
       </section>
 
-      <section className="mt-8 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Create New Item Button Section */}
+      <section className="mt-8 px-4 sm:px-6 lg:px-8">
         <div className="mt-8">
           <Link
             className="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-md shadow-md transition-colors duration-300"
             href={"/menu-items/new"}
           >
-            <div className="text-white">Create New Item</div>
+            <div>Create New Item</div>
             <Right className="ml-2" />
           </Link>
         </div>
