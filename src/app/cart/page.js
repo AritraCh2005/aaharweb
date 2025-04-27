@@ -46,8 +46,8 @@ export default function CartPage() {
           <div className="bg-gray-100 p-6 rounded-full inline-block mb-4">
             <ShoppingCart size={64} className="text-gray-400" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
-          <p className="text-gray-500 mb-6">Looks like you haven't added anything to your cart yet.</p>
+          <h2 className="text-2xl font-bold text-red-500 mb-2">Your cart is empty</h2>
+          <p className="text-white mb-6">Looks like you haven't added anything to your cart yet.</p>
           <Link
             href="/menu"
             className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-orange-500 hover:bg-orange-600 transition-colors"
