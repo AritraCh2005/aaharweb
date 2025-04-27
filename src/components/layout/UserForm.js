@@ -69,9 +69,6 @@ export default function UserForm({ user, onSave }) {
                 <div className="rounded-full overflow-hidden border-4 border-white shadow-lg w-40 h-40 bg-white/80">
                   <EditableImage link={image} setLink={setImage} />
                 </div>
-                <p className="mt-3 text-sm text-gray-700 bg-white/70 px-3 py-1 rounded-full">
-                  Click to edit profile image
-                </p>
               </div>
 
               <form className="w-full md:w-2/3" onSubmit={handleSubmit}>
