@@ -53,8 +53,8 @@ export default function UsersPage() {
   return (
     <section className="max-w-4xl mx-auto mt-8 px-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-amber-800 mb-2">Staff Management</h1>
-        <p className="text-gray-600">Manage your restaurant staff and user accounts</p>
+        <h1 className="text-3xl font-bold text-red-500 mb-2">Staff & User Management</h1>
+        <p className="text-yellow-300">Manage your restaurant staff and user accounts</p>
       </div>
 
       <UserTabs />
