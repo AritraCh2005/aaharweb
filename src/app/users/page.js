@@ -1,50 +1,138 @@
-"use client";
-import { useEffect, useState } from "react";
-import UserTabs from "../../components/layout/UserTabs";
-import { useProfile} from "../../components/UseProfile"
-import Link from "next/link";
+"use client"
+
+import { useEffect, useState } from "react"
+import UserTabs from "../../components/layout/UserTabs"
+import { useProfile } from "../../components/UseProfile"
+import Link from "next/link"
+import { User, ChefHat, Calendar, Mail } from "lucide-react"
 
 export default function UsersPage() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const { loading, data } = useProfile();
+  const { loading, data } = useProfile()
 
   useEffect(() => {
-    fetch("/api/users").then((response) => {
-      response.json().then((users) => {
-        setUsers(users);
-      });
-    });
-  }, []);
+    setIsLoading(true)
+    fetch("/api/users")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch users")
+        }
+        return response.json()
+      })
+      .then((users) => {
+        setUsers(users)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        setError(err.message)
+        setIsLoading(false)
+      })
+  }, [])
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="animate-pulse text-amber-600 text-xl">Loading...</div>
+      </div>
+    )
+  }
 
+  // Uncomment this to enable admin check
   // if (!data.admin) {
-  //   return <div>Access denied...not an Admin</div>;
+  //   return (
+  //     <div className="bg-red-100 p-4 rounded-lg text-center text-red-700 max-w-md mx-auto mt-8">
+  //       <h2 className="text-xl font-semibold mb-2">Access Denied</h2>
+  //       <p>Only administrators can access this page.</p>
+  //     </div>
+  //   );
   // }
 
   return (
-    <section className=" max-w-2xl mx-auto mt=8">
-      <UserTabs/>
-      <div>
+    <section className="max-w-4xl mx-auto mt-8 px-4">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-amber-800 mb-2">Staff Management</h1>
+        <p className="text-gray-600">Manage your restaurant staff and user accounts</p>
+      </div>
+
+      <UserTabs />
+
+      {isLoading && (
+        <div className="text-center py-8">
+          <div className="animate-pulse text-amber-600">Loading staff information...</div>
+        </div>
+      )}
+
+      {error && (
+        <div className="bg-red-100 p-4 rounded-lg text-center text-red-700 my-4">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {!isLoading && !error && users.length === 0 && (
+        <div className="text-center py-8 bg-amber-50 rounded-lg">
+          <p className="text-gray-600">No staff members found</p>
+        </div>
+      )}
+
+      <div className="grid gap-4">
         {users.length > 0 &&
           users.map((user) => (
-            <div className="bg-gray-100 rounded-lg mb-2 p-1 px-4 items-center gap-4 flex">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 grow">
-                <div className="text-gray-700">
-                {!!user.name && <span>{user.name}</span>}
-                {!user.name && <span className="italic">No name  </span>}
+            <div
+              key={user._id}
+              className="bg-white rounded-lg shadow-md overflow-hidden border border-amber-100 hover:shadow-lg transition-shadow"
+            >
+              <div className="p-5 flex flex-col md:flex-row md:items-center gap-4">
+                <div className="flex-shrink-0 bg-amber-100 p-3 rounded-full">
+                  <User className="h-6 w-6 text-amber-700" />
                 </div>
-                <span className="text-gray-600">{user.email}</span>
-              </div>
-              <div>
-                <Link className="button "href={'/users/'+user._id}>
-                Edit
-                </Link>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 grow">
+                  <div className="flex items-center gap-2">
+                    <ChefHat className="h-4 w-4 text-amber-600" />
+                    <div>
+                      <p className="text-sm text-gray-500">Name</p>
+                      {!!user.name ? (
+                        <p className="font-medium text-gray-800">{user.name}</p>
+                      ) : (
+                        <p className="italic text-gray-400">No name provided</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-amber-600" />
+                    <div>
+                      <p className="text-sm text-gray-500">Email</p>
+                      <p className="font-medium text-gray-800">{user.email}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-amber-600" />
+                    <div>
+                      <p className="text-sm text-gray-500">Joined</p>
+                      <p className="font-medium text-gray-800">
+                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Unknown"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="md:ml-auto">
+                  <Link
+                    className="inline-flex items-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md transition-colors"
+                    href={"/users/" + user._id}
+                  >
+                    Edit Profile
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
       </div>
     </section>
-  );
+  )
 }
