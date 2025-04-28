@@ -101,9 +101,9 @@ export default function LoginPage() {
           <span className="ml-3 text-gray-700 font-medium">Sign in with Google</span>
         </button>
       </div>
-      <div className="p-6">
+      {/* <div className="p-6">
                   <MenuItemForm menuItem={null} onSubmit={handleFormSubmit} />
-        </div>
+        </div> */}
     </section>
   );
 }
