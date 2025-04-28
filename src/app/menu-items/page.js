@@ -40,8 +40,8 @@ export default function MenuItemsPage() {
       <div className="mt-8 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Menu Items</h1>
-            <p className="mt-2 text-gray-500">Manage your restaurant's menu offerings</p>
+            <h1 className="text-3xl font-bold font-serif tracking-tight text-yellow-400">Menu Items</h1>
+            <p className="mt-2 text-orange-500">Manage your restaurant's menu offerings</p>
           </div>
           <Link
             href="/menu-items/new"
