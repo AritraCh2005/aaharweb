@@ -314,7 +314,7 @@ export default function Headers() {
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
             <Image
-              src="/strawberry.png"
+              src="/chef.jpg"
               width={40}
               height={40}
               alt="AAHAR Logo"
