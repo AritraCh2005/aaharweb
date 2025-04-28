@@ -71,8 +71,8 @@
 import mongoose from "mongoose"
 import { authOptions } from "../auth/[...nextauth]/route"
 import { getServerSession } from "next-auth"
-import { User } from "../../../models/User"
-import { UserInfo } from "../../../models/UserInfo"
+import { User } from "../../models/User"
+import { UserInfo } from "../../models/UserInfo"
 
 let isConnected = false
 
