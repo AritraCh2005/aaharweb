@@ -67,8 +67,9 @@
 //   return Response.json({ ...user, ...userInfo });
 // }
 
+
 import mongoose from "mongoose";
-import { authOptions } from "../../../lib/auth"; // Updated import path
+import { authOptions } from "../auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { User } from "../../../app/models/User";
 import { UserInfo } from "../../../app/models/UserInfo";
