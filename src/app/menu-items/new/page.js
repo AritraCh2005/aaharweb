@@ -48,35 +48,35 @@ export default function NewMenuItemPage() {
   // if (data && !data.admin) return <div>Access denied...not an admin</div>;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <UserTabs isAdmin={true} />
 
-      <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="mt-8 bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 px-6 py-4">
-          <h1 className="text-2xl font-bold text-white">Create New Menu Item</h1>
-          <p className="text-indigo-100 mt-1">Add a new dish to your restaurant's menu</p>
-        </div>
-
-        {/* Back Button */}
-        <div className="px-6 py-4 border-b border-gray-100">
-          <Link
-            href="/menu-items"
-            className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
-          >
-            <span className="flex items-center justify-center">
-              <Left />
-            </span>
-            <span>Back to menu items</span>
-          </Link>
+        <div className="bg-gradient-to-r from-primary to-primary/80 px-6 py-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-white">Create New Menu Item</h1>
+              <p className="text-white/80 mt-1">Add a new dish to your restaurant's menu</p>
+            </div>
+            <Link
+              href="/menu-items"
+              className="inline-flex items-center gap-2 text-sm font-medium text-white bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+            >
+              <span className="flex items-center justify-center">
+                <Left />
+              </span>
+              <span>Back to menu items</span>
+            </Link>
+          </div>
         </div>
 
         {/* Loading State */}
         {loading ? (
-          <div className="p-8 flex justify-center">
-            <div className="flex items-center space-x-4">
-              <div className="w-6 h-6 border-t-2 border-b-2 border-indigo-500 rounded-full animate-spin"></div>
-              <p className="text-gray-500">Loading...</p>
+          <div className="p-12 flex justify-center">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="w-10 h-10 border-t-4 border-b-4 border-primary rounded-full animate-spin"></div>
+              <p className="text-gray-500 font-medium">Loading menu item form...</p>
             </div>
           </div>
         ) : (
@@ -87,8 +87,11 @@ export default function NewMenuItemPage() {
       </div>
 
       {/* Help Text */}
-      <div className="mt-6 text-center text-sm text-gray-500">
-        <p>Fill in all the details to create a new menu item. All fields are required.</p>
+      <div className="mt-6 text-center text-sm text-gray-500 bg-gray-50 p-4 rounded-xl">
+        <p className="font-medium">Need help?</p>
+        <p className="mt-1">
+          Fill in all the details to create a new menu item. All fields marked with * are required.
+        </p>
       </div>
     </div>
   )

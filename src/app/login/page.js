@@ -3,6 +3,7 @@
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import { useState } from 'react';
+import MenuItemForm from "../../components/layout/MenuItemForm"
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="min-h-screen flex items-center justify-center p-4">
+    <section className="min-h-screen items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <h1 className="text-center text-gray-800 font-bold text-3xl">
           Welcome Back ! 😊
@@ -100,6 +101,9 @@ export default function LoginPage() {
           <span className="ml-3 text-gray-700 font-medium">Sign in with Google</span>
         </button>
       </div>
+      <div className="p-6">
+                  <MenuItemForm menuItem={null} onSubmit={handleFormSubmit} />
+        </div>
     </section>
   );
 }
