@@ -67,80 +67,55 @@
 //   return Response.json({ ...user, ...userInfo });
 // }
 
+import mongoose from "mongoose";
+import { authOptions } from "../../../lib/auth"; // Updated import path
+import { getServerSession } from "next-auth";
+import { User } from "../../../app/models/User";
+import { UserInfo } from "../../../app/models/UserInfo";
 
-import mongoose from "mongoose"
-import { authOptions } from "../auth/[...nextauth]/route"
-import { getServerSession } from "next-auth"
-import { User } from "../../models/User"
-import { UserInfo } from "../../models/UserInfo"
-
-let isConnected = false
+let isConnected = false;
 
 async function connectDB() {
   if (!isConnected) {
-    await mongoose.connect(process.env.MONGO_URL)
-    isConnected = true
+    await mongoose.connect(process.env.MONGO_URL);
+    isConnected = true;
   }
 }
 
 export async function PUT(req) {
-  await connectDB()
-  const data = await req.json()
-  const { _id, name, image, ...otherUserInfo } = data
+  await connectDB();
+  const data = await req.json();
+  const { _id, name, image, ...otherUserInfo } = data;
 
-  let filter = {}
-  try {
-    if (_id) {
-      filter = { _id }
-    } else {
-      const session = await getServerSession(authOptions)
-      if (!session?.user?.email) {
-        return new Response(JSON.stringify({ error: "Not authenticated" }), { status: 401 })
-      }
-      filter = { email: session.user.email }
-    }
+  const filter = _id
+    ? { _id }
+    : { email: (await getServerSession(authOptions)).user.email };
 
-    const user = await User.findOne(filter)
-    if (!user) {
-      return new Response(JSON.stringify({ error: "User not found" }), { status: 404 })
-    }
-
-    await User.updateOne(filter, { name, image })
-    await UserInfo.findOneAndUpdate({ email: user.email }, otherUserInfo, { upsert: true })
-
-    return new Response(JSON.stringify({ success: true }), { status: 200 })
-  } catch (error) {
-    console.error("Profile update error:", error)
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 })
+  const user = await User.findOne(filter);
+  if (!user) {
+    return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
   }
+
+  await User.updateOne(filter, { name, image });
+  await UserInfo.findOneAndUpdate({ email: user.email }, otherUserInfo, { upsert: true });
+
+  return new Response(JSON.stringify({ success: true }), { status: 200 });
 }
 
 export async function GET(req) {
-  try {
-    await connectDB()
-    const url = new URL(req.url)
-    const _id = url.searchParams.get("_id")
+  await connectDB();
+  const url = new URL(req.url);
+  const _id = url.searchParams.get("_id");
 
-    let filter = {}
-    if (_id) {
-      filter = { _id }
-    } else {
-      const session = await getServerSession(authOptions)
-      if (!session?.user?.email) {
-        return new Response(JSON.stringify({ error: "Not authenticated" }), { status: 401 })
-      }
-      filter = { email: session.user.email }
-    }
+  const filter = _id
+    ? { _id }
+    : { email: (await getServerSession(authOptions))?.user?.email };
 
-    const user = await User.findOne(filter).lean()
-    if (!user) {
-      return new Response(JSON.stringify({ error: "User not found" }), { status: 404 })
-    }
-
-    const userInfo = await UserInfo.findOne({ email: user.email }).lean()
-    return new Response(JSON.stringify({ ...user, ...userInfo }), { status: 200 })
-  } catch (error) {
-    console.error("Profile fetch error:", error)
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 })
+  const user = await User.findOne(filter).lean();
+  if (!user) {
+    return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
   }
+
+  const userInfo = await UserInfo.findOne({ email: user.email }).lean();
+  return new Response(JSON.stringify({ ...user, ...userInfo }), { status: 200 });
 }
