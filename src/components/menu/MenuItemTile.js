@@ -1,16 +1,30 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
 import { ShoppingCart, ChevronRight } from "lucide-react"
 import Image from "next/image"
 
-export default function MenuItemTile({ onAddToCart, ...item }) {
+export default function MenuItemTile({ onAddToCart, isAuthenticated, sessionStatus, ...item }) {
   const { name, basePrice, image, description, sizes, extraIngredientPrices } = item
+  const router = useRouter()
 
   const hasSizesOrExtras = sizes?.length > 0 || extraIngredientPrices?.length > 0
 
+  const handleAddToCart = () => {
+    // Check authentication before proceeding
+    if (!isAuthenticated) {
+      toast.error("Please login to add items to cart")
+      router.push("/login")
+      return
+    }
+
+    onAddToCart()
+  }
+
   return (
     <div className="group relative rounded-xl transition-all duration-300 hover:shadow-xl w-full max-w-xs sm:max-w-sm md:max-w-md flex flex-col">
- {/* Increased width */}
+      {/* Increased width */}
       {/* Food image with gradient overlay */}
       <div className="relative h-64 w-full overflow-hidden rounded-t-xl">
         <Image
@@ -50,7 +64,7 @@ export default function MenuItemTile({ onAddToCart, ...item }) {
         <div className="mt-3 flex items-center justify-between">
           <button
             type="button"
-            onClick={onAddToCart}
+            onClick={handleAddToCart}
             className="flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-orange-600 hover:shadow-md"
           >
             {hasSizesOrExtras ? (
