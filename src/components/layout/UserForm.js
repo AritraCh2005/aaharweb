@@ -144,7 +144,7 @@ export default function UserForm({ user, onSave }) {
                     />
                   </div>
 
-                  {loggedInUserData?.admin && (
+                  {/* {loggedInUserData?.admin && (
                     <div className="mt-6">
                       <label className="p-3 inline-flex items-center gap-2 border mb-2 bg-red-600 text-blackrounded-lg shadow-md hover:bg-red-700 transition-colors cursor-pointer">
                         <input
@@ -156,7 +156,7 @@ export default function UserForm({ user, onSave }) {
                         <span className="font-medium">Admin</span>
                       </label>
                     </div>
-                  )}
+                  )} */}
 
                   <div className="flex justify-end mt-6">
                     <button
