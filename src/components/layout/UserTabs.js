@@ -10,13 +10,10 @@ export default function UserTabs({ isAdmin }) {
   const { data: session } = useSession()
   const userId = session?.user?.id
 
-  // Build dynamic profile href
-  const profileHref = userId ? `/users/${userId}` : "/login"
-
   const tabs = [
     {
       label: "Profile",
-      href: profileHref,
+      href: "/profile",
       icon: User,
       active: ["/profile", `/users/${userId}`].includes(path),
     },
@@ -56,8 +53,8 @@ export default function UserTabs({ isAdmin }) {
               flex items-center gap-1.5 px-4 py-2.5 rounded-full font-medium transition-all
               ${
                 tab.active
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  ? "bg-red-600 text-white shadow-lg shadow-red-200"
+                  : "bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800"
               }
             `}
           >

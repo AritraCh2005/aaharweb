@@ -1,47 +1,68 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
 import UserTabs from "../../components/layout/UserTabs"
 import { useProfile } from "../../components/UseProfile"
 import Link from "next/link"
 import { User, ChefHat, Calendar, Mail } from "lucide-react"
 
 export default function UsersPage() {
+  const { data: session, status } = useSession()
   const [users, setUsers] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
   const { loading, data } = useProfile()
 
+  // Redirect to login if not authenticated
   useEffect(() => {
-    setIsLoading(true)
-    fetch("/api/users")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch users")
-        }
-        return response.json()
-      })
-      .then((users) => {
-        setUsers(users)
-        setIsLoading(false)
-      })
-      .catch((err) => {
-        setError(err.message)
-        setIsLoading(false)
-      })
-  }, [])
+    if (status === "unauthenticated") {
+      redirect("/login")
+    }
+  }, [status])
 
-  if (loading) {
+  useEffect(() => {
+    if (status === "authenticated") {
+      setIsLoading(true)
+      fetch("/api/users")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch users")
+          }
+          return response.json()
+        })
+        .then((users) => {
+          setUsers(users)
+          setIsLoading(false)
+        })
+        .catch((err) => {
+          setError(err.message)
+          setIsLoading(false)
+        })
+    }
+  }, [status])
+
+  // Show loading while checking authentication
+  if (status === "loading" || loading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-pulse text-amber-600 text-xl">Loading...</div>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
       </div>
     )
   }
 
-  // Uncomment this to enable admin check
-  // if (!data.admin) {
+  // Don't render anything if not authenticated (will redirect)
+  if (status === "unauthenticated") {
+    return null
+  }
+
+  // Admin check commented out - all authenticated users can access this page
+  // if (!data?.admin) {
   //   return (
   //     <div className="bg-red-100 p-4 rounded-lg text-center text-red-700 max-w-md mx-auto mt-8">
   //       <h2 className="text-xl font-semibold mb-2">Access Denied</h2>
@@ -57,7 +78,7 @@ export default function UsersPage() {
         <p className="text-yellow-300">Manage your restaurant staff and user accounts</p>
       </div>
 
-      <UserTabs />
+      <UserTabs isAdmin={data?.admin} />
 
       {isLoading && (
         <div className="text-center py-8">

@@ -305,7 +305,7 @@ export default function Headers() {
   }
 
   // build the dynamic profile URL
-  const profileHref = userData ? `/users/${userData.id}` : "/login";
+  const profileHref = userData ? `/profile` : "/login";
 
   return (
     <header className="bg-gradient-to-r from-green-900 to-green-800 text-white shadow-lg sticky top-0 z-50">

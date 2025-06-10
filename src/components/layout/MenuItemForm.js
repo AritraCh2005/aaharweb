@@ -3,6 +3,7 @@
 import EditableImage from "./EditableImage"
 import { useEffect, useState } from "react"
 import MenuItemPriceProps from "./MenuItemPriceProps"
+import toast from "react-hot-toast"
 
 export default function MenuItemForm({ onSubmit, menuItem }) {
   const [name, setName] = useState(menuItem?.name || "")
@@ -25,6 +26,32 @@ export default function MenuItemForm({ onSubmit, menuItem }) {
     })
   }, [])
 
+  async function handleFileChange(ev) {
+    const files = ev.target.files
+    if (files?.length === 1) {
+      const data = new FormData()
+      data.set("file", files[0])
+
+      const uploadPromise = fetch("/api/upload", {
+        method: "POST",
+        body: data,
+      }).then((response) => {
+        if (response.ok) {
+          return response.json().then((link) => {
+            setImage(link)
+          })
+        }
+        throw new Error("Something went wrong")
+      })
+
+      await toast.promise(uploadPromise, {
+        loading: "Uploading...",
+        success: "Upload complete",
+        error: "Upload error",
+      })
+    }
+  }
+
   return (
     <form
       onSubmit={(ev) =>
@@ -45,6 +72,15 @@ export default function MenuItemForm({ onSubmit, menuItem }) {
           <div className="w-full aspect-square mb-4">
             <EditableImage link={image} setLink={setImage} />
           </div>
+
+          {/* Edit Image Button - Added below the image */}
+          <label className="mt-4">
+            <input type="file" className="hidden" onChange={handleFileChange} />
+            <span className="block border border-gray-300 bg-blue-700 hover:bg-blue-800 text-white rounded-lg p-2 px-4 text-center cursor-pointer transition-colors">
+              Edit Image
+            </span>
+          </label>
+
           <p className="text-sm text-gray-500 text-center mt-2">Upload a high-quality image of your menu item</p>
         </div>
 

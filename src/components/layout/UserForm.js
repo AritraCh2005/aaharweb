@@ -4,6 +4,7 @@ import { useProfile } from "../UseProfile"
 import EditableImage from "./EditableImage"
 import { useState, useEffect } from "react"
 import AddressInputs from "../layout/AddressInputs"
+import toast from "react-hot-toast"
 
 export default function UserForm({ user, onSave }) {
   const [image, setImage] = useState(user?.image || "")
@@ -52,6 +53,32 @@ export default function UserForm({ user, onSave }) {
     })
   }
 
+  async function handleFileChange(ev) {
+    const files = ev.target.files
+    if (files?.length === 1) {
+      const data = new FormData()
+      data.set("file", files[0])
+
+      const uploadPromise = fetch("/api/upload", {
+        method: "POST",
+        body: data,
+      }).then((response) => {
+        if (response.ok) {
+          return response.json().then((link) => {
+            setImage(link)
+          })
+        }
+        throw new Error("Something went wrong")
+      })
+
+      await toast.promise(uploadPromise, {
+        loading: "Uploading...",
+        success: "Upload complete",
+        error: "Upload error",
+      })
+    }
+  }
+
   return (
     <>
       <div
@@ -69,6 +96,14 @@ export default function UserForm({ user, onSave }) {
                 <div className="rounded-full overflow-hidden border-4 border-white shadow-lg w-40 h-40 bg-white/80">
                   <EditableImage link={image} setLink={setImage} />
                 </div>
+
+                {/* Change Image Button - Now Outside the Circle */}
+                <label className="mt-4">
+                  <input type="file" className="hidden" onChange={handleFileChange} />
+                  <span className="block border border-gray-300 bg-blue-700 hover:bg-blue-800 text-white rounded-lg p-2 px-4 text-center cursor-pointer transition-colors">
+                    Change Image
+                  </span>
+                </label>
               </div>
 
               <form className="w-full md:w-2/3" onSubmit={handleSubmit}>
@@ -81,7 +116,7 @@ export default function UserForm({ user, onSave }) {
                         placeholder="First and last name"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all bg-white/80 backdrop-blur-sm"
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all bg-white/80 backdrop-blur-sm text-black"
                       />
                     </div>
 
@@ -91,7 +126,7 @@ export default function UserForm({ user, onSave }) {
                         type="email"
                         value={user?.email || ""}
                         disabled
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100/80 text-gray-500"
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100/80 text-black"
                       />
                     </div>
                   </div>
@@ -111,7 +146,7 @@ export default function UserForm({ user, onSave }) {
 
                   {loggedInUserData?.admin && (
                     <div className="mt-6">
-                      <label className="p-3 inline-flex items-center gap-2 border mb-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition-colors cursor-pointer">
+                      <label className="p-3 inline-flex items-center gap-2 border mb-2 bg-red-600 text-blackrounded-lg shadow-md hover:bg-red-700 transition-colors cursor-pointer">
                         <input
                           type="checkbox"
                           checked={admin}

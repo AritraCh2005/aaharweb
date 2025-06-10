@@ -1,17 +1,27 @@
 "use client"
 
 import { useContext, useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
 import { CartContext, cartProductPrice } from "../../components/AppContext"
 import Image from "next/image"
 import AddressInputs from "../../components/layout/AddressInputs"
 import { useProfile } from "../../components/UseProfile"
-import { Minus, Plus, ShoppingCart, Trash2, CreditCard, ArrowRight } from "lucide-react"
+import { ShoppingCart, Trash2, CreditCard, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 export default function CartPage() {
+  const { data: session, status } = useSession()
   const { cartProducts, removeCartProduct } = useContext(CartContext)
   const [address, setAddress] = useState({})
   const { data: profileData } = useProfile()
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      redirect("/login")
+    }
+  }, [status])
 
   useEffect(() => {
     if (profileData?.city) {
@@ -26,6 +36,23 @@ export default function CartPage() {
       setAddress(addressFromProfile)
     }
   }, [profileData])
+
+  // Show loading while checking authentication
+  if (status === "loading") {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render anything if not authenticated (will redirect)
+  if (status === "unauthenticated") {
+    return null
+  }
 
   let subtotal = 0
   for (const p of cartProducts) {
@@ -113,9 +140,7 @@ export default function CartPage() {
                         )}
 
                         <div className="flex-1 flex items-end justify-between text-sm">
-                          <div className="flex items-center space-x-2">
-                            
-                          </div>
+                          <div className="flex items-center space-x-2"></div>
 
                           <div className="flex">
                             <button

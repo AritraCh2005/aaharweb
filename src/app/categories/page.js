@@ -1,305 +1,9 @@
-// "use client";
-// import { useEffect, useState } from "react";
-// import UserTabs from "../../components/layout/UserTabs";
-// import { useProfile } from "../../components/useProfile";
-// import toast from "react-hot-toast";
-// import DeleteButton from "../../components/DeleteButton";
-// import EditIcon from "../../components/icons/EditIcon";
-
-// export default function CategoriesPage() {
-//   const [categoryName, setCategoryName] = useState("");
-//   const [categories, setCategories] = useState([]);
-//   const { loading: profileLoading, data: profileData } = useProfile();
-//   const [editedCategory, setEditedCategory] = useState(null);
-
-//   useEffect(() => {
-//     fetchCategories();
-//   }, []);
-
-//   function fetchCategories() {
-//     fetch("/api/categories").then((res) => {
-//       res.json().then((categories) => {
-//         setCategories(categories);
-//       });
-//     });
-//   }
-
-//   async function handleCategorySubmit(ev) {
-//     ev.preventDefault();
-//     const creationPromise = new Promise(async (resolve, reject) => {
-//       const data = { name: categoryName };
-//       if (editedCategory) {
-//         data._id = editedCategory._id;
-//       }
-//       const response = await fetch("/api/categories", {
-//         method: editedCategory ? "PUT" : "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data),
-//       });
-//       setCategoryName("");
-//       fetchCategories();
-//       // setEditedCategory(null);
-//       if (response.ok) resolve();
-//       else reject();
-//     });
-//     await toast.promise(creationPromise, {
-//       loading: editedCategory
-//         ? "Updating category..."
-//         : "Creating your new category...",
-//       success: editedCategory ? "Category updated" : "Category created",
-//       error: "Error, sorry...",
-//     });
-//   }
-
-//   async function handleDeleteClick(_id) {
-//     const promise = new Promise(async (resolve, reject) => {
-//       const response = await fetch("/api/categories?_id=" + _id, {
-//         method: "DELETE",
-//       });
-//       if (response.ok) {
-//         resolve();
-//       } else {
-//         reject();
-//       }
-//     });
-
-//     await toast.promise(promise, {
-//       loading: "Deleting...",
-//       success: "Deleted",
-//       error: "Error",
-//     });
-
-//     fetchCategories();
-//   }
-
-//   if (profileLoading) {
-//     return <div>Loading user info...</div>;
-//   }
-//   if (!profileData.admin) {
-//     return <div>You are not authorized to view this page</div>;
-//   }
-
-//   return (
-//     <section className="container mt-8 max-w-2xl items-center mx-auto ">
-//       <UserTabs isAdmin={true} />
-
-//       <form className="mt-8" onSubmit={handleCategorySubmit}>
-//         <div className="flex items-end gap-4">
-//           <div className="grow">
-//             <label>
-//               {editedCategory ? "Edit Category Name" : "Create New Category"}
-//               {editedCategory && <>: {editedCategory.name}</>}
-//             </label>
-//             <input
-//               type="text"
-//               className="font-serif"
-//               value={categoryName}
-//               onChange={(ev) => setCategoryName(ev.target.value)}
-//               name="category"
-//             />
-//           </div>
-//           <div className="pb-2 flex gap-2">
-//             <button type="submit">{editedCategory ? "Update" : "Add"}</button>
-//             <button
-//               type="button"
-//               className="text-white"
-//               onClick={() => {
-//                 setEditedCategory(null);
-//                 setCategoryName("");
-//               }}
-//             >
-//               Cancel
-//             </button>
-//           </div>
-//         </div>
-//       </form>
-//       <div>
-        
-//           <h2 className="mt-8 text-sm text-gray-500">Existing categories</h2>
-//           {categories?.length > 0 &&
-//             categories.map((c) => (
-//               <div
-//                 key={c._id}
-//                 className="bg-gray-100 rounded-xl p-2 px-4 flex gap-1 mb-1 items-center"
-//               >
-//                 <div className="grow font-serif font-bold">{c.name}</div>
-//                 <div className="flex gap-1">
-//                   <button
-//                     type="button"
-//                     onClick={() => {
-//                       setEditedCategory(c);
-//                       setCategoryName(c.name);
-//                     }}
-//                   >
-//                     <EditIcon />
-//                   </button>
-//                   <DeleteButton
-//                     label="Delete"
-//                     onDelete={() => handleDeleteClick(c._id)}
-//                   />
-//                 </div>
-//               </div>
-//             ))}
-//         </div>
-//     </section>
-//   );
-// }
-
-// 'use client';
-// import { useEffect, useState } from "react";
-// import UserTabs from "../../components/layout/UserTabs";
-// import { useProfile } from "../../components/UseProfile";
-// import toast from "react-hot-toast";
-// import DeleteButton from "../../components/DeleteButton";
-// import EditIcon from "../../components/icons/EditIcon";
-// import Trash from "../../components/icons/Trash";
-
-// export default function CategoriesPage() {
-//   const [categoryName, setCategoryName] = useState("");
-//   const [categories, setCategories] = useState([]);
-//   const { loading: profileLoading, data: profileData } = useProfile();
-//   const [editedCategory, setEditedCategory] = useState(null);
-
-//   useEffect(() => {
-//     fetchCategories();
-//   }, []);
-
-//   function fetchCategories() {
-//     fetch("/api/categories").then((res) => {
-//       res.json().then((categories) => {
-//         setCategories(categories);
-//       });
-//     });
-//   }
-
-//   async function handleCategorySubmit(ev) {
-//     ev.preventDefault();
-//     const creationPromise = new Promise(async (resolve, reject) => {
-//       const data = { name: categoryName };
-//       if (editedCategory) {
-//         data._id = editedCategory._id;
-//       }
-//       const response = await fetch("/api/categories", {
-//         method: editedCategory ? "PUT" : "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data),
-//       });
-//       setCategoryName("");
-//       fetchCategories();
-//       if (response.ok) resolve();
-//       else reject();
-//     });
-//     await toast.promise(creationPromise, {
-//       loading: editedCategory
-//         ? "Updating category..."
-//         : "Creating your new category...",
-//       success: editedCategory ? "Category updated" : "Category created",
-//       error: "Error, sorry...",
-//     });
-//   }
-
-//   async function handleDeleteClick(_id) {
-//     const promise = new Promise(async (resolve, reject) => {
-//       const response = await fetch("/api/categories?_id=" + _id, {
-//         method: "DELETE",
-//       });
-//       if (response.ok) {
-//         resolve();
-//       } else {
-//         reject();
-//       }
-//     });
-
-//     await toast.promise(promise, {
-//       loading: "Deleting...",
-//       success: "Deleted",
-//       error: "Error",
-//     });
-
-//     fetchCategories();
-//   }
-
-//   if (profileLoading) {
-//     return <div>Loading user info...</div>;
-//   }
-//   if (!profileData.admin) {
-//     return <div>You are not authorized to view this page</div>;
-//   }
-
-//   return (
-//     <section className="container mt-8 max-w-2xl items-center mx-auto">
-//       <UserTabs isAdmin={true} />
-
-//       <form className="mt-8" onSubmit={handleCategorySubmit}>
-//         <div className="flex items-end gap-4">
-//           <div className="grow">
-//             <label>
-//               {editedCategory ? "Edit Category Name" : "Create New Category"}
-//               {editedCategory && <>: {editedCategory.name}</>}
-//             </label>
-//             <input
-//               type="text"
-//               className="font-serif"
-//               value={categoryName}
-//               onChange={(ev) => setCategoryName(ev.target.value)}
-//               name="category"
-//             />
-//           </div>
-//           <div className="pb-2 flex gap-2">
-//             <button type="submit">
-//               {editedCategory ? "Update" : "Add"}
-//             </button>
-//             <button
-//               type="button"
-//               className="text-white"
-//               onClick={() => {
-//                 setEditedCategory(null);
-//                 setCategoryName("");
-//               }}
-//             >
-//               Cancel
-//             </button>
-//           </div>
-//         </div>
-//       </form>
-//       <div>
-//         <h2 className="mt-8 text-sm text-gray-500">Existing categories</h2>
-//         {categories?.length > 0 &&
-//           categories.map((c) => (
-//             <div
-//               key={c._id}
-//               className="bg-gray-100 rounded-xl p-2 px-8 flex gap-1 mb-1 items-center"
-//               style={{
-//                 backgroundImage: "url('/texture-wooden-boards.jpg')",
-//                 backgroundSize: "cover",
-//                 backgroundPosition: "center",
-//               }}
-//             >
-//               <div className="grow font-serif font-bold text-black px-4 py-4">{c.name}</div>
-//               <div className="flex gap-1">
-//                 <button
-//                   type="button"
-//                   onClick={() => {
-//                     setEditedCategory(c);
-//                     setCategoryName(c.name);
-//                   }}
-//                 >
-//                   <EditIcon />
-//                 </button>
-//                 <div className="text-black">
-//                 <DeleteButton label={<Trash/>} onDelete={() => handleDeleteClick(c._id)} />
-//                   </div>
-//               </div>
-//             </div>
-//           ))}
-//       </div>
-//     </section>
-//   );
-// }
-
 "use client"
 import { useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
 import UserTabs from "../../components/layout/UserTabs"
+import { useProfile } from "../../components/UseProfile"
 import toast from "react-hot-toast"
 import DeleteButton from "../../components/DeleteButton"
 import EditIcon from "../../components/icons/EditIcon"
@@ -307,13 +11,24 @@ import Trash from "../../components/icons/Trash"
 import { Coffee, Utensils, ChefHat, Pizza } from "lucide-react"
 
 export default function CategoriesPage() {
+  const { data: session, status } = useSession()
+  const { loading: profileLoading, data: profileData } = useProfile()
   const [categoryName, setCategoryName] = useState("")
   const [categories, setCategories] = useState([])
   const [editedCategory, setEditedCategory] = useState(null)
 
+  // Redirect to login if not authenticated
   useEffect(() => {
-    fetchCategories()
-  }, [])
+    if (status === "unauthenticated") {
+      redirect("/login")
+    }
+  }, [status])
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetchCategories()
+    }
+  }, [status])
 
   function fetchCategories() {
     fetch("/api/categories").then((res) => {
@@ -379,22 +94,60 @@ export default function CategoriesPage() {
     return icons[index % icons.length]
   }
 
+  // Show loading while checking authentication or profile
+  if (status === "loading" || profileLoading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render anything if not authenticated (will redirect)
+  if (status === "unauthenticated") {
+    return null
+  }
+
+  // Check if user is admin
+  // if (!profileData?.admin) {
+  //   return (
+  //     <div className="min-h-[60vh] flex items-center justify-center">
+  //       <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md">
+  //         <div className="bg-red-100 p-4 rounded-full inline-block mb-4">
+  //           <ChefHat className="h-8 w-8 text-red-600" />
+  //         </div>
+  //         <h2 className="text-2xl font-bold text-red-600 mb-2">Access Denied</h2>
+  //         <p className="text-gray-600 mb-4">You need admin privileges to access this page.</p>
+  //         <button
+  //           onClick={() => window.history.back()}
+  //           className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+  //         >
+  //           Go Back
+  //         </button>
+  //       </div>
+  //     </div>
+  //   )
+  // }
+
   return (
     <div className="min-h-screen bg-[#fcf9f2]">
       <div
-        className="w-full h-48 bg-cover bg-center"
+        className="w-full h-48 bg-cover bg-center bg-green-700"
         style={{
           backgroundImage: "url('/placeholder.svg?height=300&width=1200')",
           backgroundPosition: "center",
         }}
       >
         <div className="w-full h-full flex items-center justify-center bg-black/40">
-          <h1 className="text-4xl font-bold text-white font-serif">Menu Categories</h1>
+          <h1 className="text-4xl font-bold  text-white font-serif">Menu Categories</h1>
         </div>
       </div>
 
       <section className="container max-w-4xl mx-auto px-4 py-8">
-        <UserTabs isAdmin={true} />
+        <UserTabs isAdmin={profileData?.admin} />
 
         <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-amber-100">
           <div className="flex items-center mb-6">

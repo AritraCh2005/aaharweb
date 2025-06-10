@@ -1,7 +1,8 @@
 "use client"
 
 import { useProfile } from "../../../components/UseProfile"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
 import UserTabs from "../../../components/layout/UserTabs"
 import Link from "next/link"
 import Left from "../../../components/icons/Left"
@@ -10,9 +11,17 @@ import { redirect } from "next/navigation"
 import MenuItemForm from "../../../components/layout/MenuItemForm"
 
 export default function NewMenuItemPage() {
+  const { data: session, status } = useSession()
   const [menuItems, setMenuItems] = useState([])
   const { loading, data } = useProfile()
   const [redirectToItems, setRedirectToItems] = useState(false)
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      redirect("/login")
+    }
+  }, [status])
 
   async function handleFormSubmit(ev, data) {
     ev.preventDefault()
@@ -44,12 +53,28 @@ export default function NewMenuItemPage() {
 
   if (redirectToItems) return redirect("/menu-items")
 
-  // Admin check is commented out but functionality is preserved
-  // if (data && !data.admin) return <div>Access denied...not an admin</div>;
+  // Show loading while checking authentication
+  if (status === "loading" || loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render anything if not authenticated (will redirect)
+  if (status === "unauthenticated") {
+    return null
+  }
+
+  // Admin check removed - all authenticated users can access this page
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <UserTabs isAdmin={true} />
+      <UserTabs isAdmin={data?.admin} />
 
       <div className="mt-8 bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
         {/* Header */}
@@ -71,19 +96,10 @@ export default function NewMenuItemPage() {
           </div>
         </div>
 
-        {/* Loading State */}
-        {loading ? (
-          <div className="p-12 flex justify-center">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="w-10 h-10 border-t-4 border-b-4 border-primary rounded-full animate-spin"></div>
-              <p className="text-gray-500 font-medium">Loading menu item form...</p>
-            </div>
-          </div>
-        ) : (
-          <div className="p-6">
-            <MenuItemForm menuItem={null} onSubmit={handleFormSubmit} />
-          </div>
-        )}
+        {/* Form Content */}
+        <div className="p-6">
+          <MenuItemForm menuItem={null} onSubmit={handleFormSubmit} />
+        </div>
       </div>
 
       {/* Help Text */}
