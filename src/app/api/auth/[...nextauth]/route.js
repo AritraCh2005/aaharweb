@@ -53,7 +53,7 @@ import clientPromise from '../../../../libs/mongoConnect'// Declare the clientPr
 
 const authOptions = {
   // Fix: Use NEXTAUTH_SECRET instead of SECRET
-  secret: process.env.SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   //adapter: MongoDBAdapter(clientPromise),
   providers: [
     GoogleProvider({
