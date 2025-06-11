@@ -1,28 +1,25 @@
-'use client';
+"use client"
 
-import { signIn } from 'next-auth/react';
-import Image from 'next/image';
-import { useState } from 'react';
-import MenuItemForm from "../../components/layout/MenuItemForm"
+import { signIn } from "next-auth/react"
+import Image from "next/image"
+import { useState } from "react"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginInProgress, setLoginInProgress] = useState(false);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loginInProgress, setLoginInProgress] = useState(false)
 
   async function handleFormSubmit(ev) {
-    ev.preventDefault();
-    setLoginInProgress(true);
-    await signIn('credentials', { email, password, callbackUrl: '/' });
-    setLoginInProgress(false);
+    ev.preventDefault()
+    setLoginInProgress(true)
+    await signIn("credentials", { email, password, callbackUrl: "/" })
+    setLoginInProgress(false)
   }
 
   return (
     <section className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-6">
-        <h1 className="text-center text-gray-800 font-bold text-3xl">
-          Welcome Back ! 😊
-        </h1>
+        <h1 className="text-center text-gray-800 font-bold text-3xl">Welcome Back ! 😊</h1>
         <form onSubmit={handleFormSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -35,8 +32,8 @@ export default function LoginPage() {
               placeholder="you@example.com"
               value={email}
               disabled={loginInProgress}
-              onChange={ev => setEmail(ev.target.value)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(ev) => setEmail(ev.target.value)}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               required
             />
           </div>
@@ -52,8 +49,8 @@ export default function LoginPage() {
               placeholder="••••••••"
               value={password}
               disabled={loginInProgress}
-              onChange={ev => setPassword(ev.target.value)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(ev) => setPassword(ev.target.value)}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               required
             />
           </div>
@@ -70,22 +67,11 @@ export default function LoginPage() {
                 fill="none"
                 viewBox="0 0 24 24"
               >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                />
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
               </svg>
             ) : (
-              'Log In'
+              "Log In"
             )}
           </button>
         </form>
@@ -94,7 +80,7 @@ export default function LoginPage() {
 
         <button
           type="button"
-          onClick={() => signIn('google', { callbackUrl: '/' })}
+          onClick={() => signIn("google", { callbackUrl: "/" })}
           className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
         >
           <Image src="/google.png" alt="Google logo" width={20} height={20} />
@@ -102,5 +88,5 @@ export default function LoginPage() {
         </button>
       </div>
     </section>
-  );
+  )
 }

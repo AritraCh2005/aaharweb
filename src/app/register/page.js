@@ -1,50 +1,51 @@
-'use client';
+"use client"
 
-import { signIn } from 'next-auth/react';
-import Image from 'next/image';
-import { useState } from 'react';
-import Link from 'next/link';
+import { signIn } from "next-auth/react"
+import Image from "next/image"
+import { useState } from "react"
+import Link from "next/link"
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [creatingUser, setCreatingUser] = useState(false);
-  const [userCreated, setUserCreated] = useState(false);
-  const [error, setError] = useState(false);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [creatingUser, setCreatingUser] = useState(false)
+  const [userCreated, setUserCreated] = useState(false)
+  const [error, setError] = useState(false)
 
   async function handleFormSubmit(ev) {
-    ev.preventDefault();
-    setCreatingUser(true);
-    setError(false);
-    setUserCreated(false);
+    ev.preventDefault()
+    setCreatingUser(true)
+    setError(false)
+    setUserCreated(false)
 
-    const response = await fetch('/api/register', {
-      method: 'POST',
+    const response = await fetch("/api/register", {
+      method: "POST",
       body: JSON.stringify({ email, password }),
-      headers: { 'Content-Type': 'application/json' },
-    });
+      headers: { "Content-Type": "application/json" },
+    })
 
     if (response.ok) {
-      setUserCreated(true);
-      setEmail('');
-      setPassword('');
+      setUserCreated(true)
+      setEmail("")
+      setPassword("")
     } else {
-      setError(true);
+      setError(true)
     }
 
-    setCreatingUser(false);
+    setCreatingUser(false)
   }
 
   return (
     <section className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-6">
-        <h1 className="text-center text-gray-800 font-bold text-3xl">
-          Create an Account
-        </h1>
+        <h1 className="text-center text-gray-800 font-bold text-3xl">Create an Account</h1>
 
         {userCreated && (
           <div className="p-4 bg-green-100 text-green-800 rounded-lg text-center">
-            Account created! <Link href="/login" className="underline font-medium">Log in &raquo;</Link>
+            Account created!{" "}
+            <Link href="/login" className="underline font-medium">
+              Log in &raquo;
+            </Link>
           </div>
         )}
 
@@ -65,8 +66,8 @@ export default function RegisterPage() {
               placeholder="you@example.com"
               value={email}
               disabled={creatingUser}
-              onChange={ev => setEmail(ev.target.value)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(ev) => setEmail(ev.target.value)}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               required
             />
           </div>
@@ -81,8 +82,8 @@ export default function RegisterPage() {
               placeholder="••••••••"
               value={password}
               disabled={creatingUser}
-              onChange={ev => setPassword(ev.target.value)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(ev) => setPassword(ev.target.value)}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               required
             />
           </div>
@@ -99,22 +100,11 @@ export default function RegisterPage() {
                 fill="none"
                 viewBox="0 0 24 24"
               >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                />
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
               </svg>
             ) : (
-              'Register'
+              "Register"
             )}
           </button>
         </form>
@@ -123,7 +113,7 @@ export default function RegisterPage() {
 
         <button
           type="button"
-          onClick={() => signIn('google', { callbackUrl: '/' })}
+          onClick={() => signIn("google", { callbackUrl: "/" })}
           className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
         >
           <Image src="/google.png" alt="Google logo" width={20} height={20} />
@@ -131,9 +121,12 @@ export default function RegisterPage() {
         </button>
 
         <div className="text-center text-gray-600">
-          Already have an account? <Link href="/login" className="underline font-medium">Log in &raquo;</Link>
+          Already have an account?{" "}
+          <Link href="/login" className="underline font-medium">
+            Log in &raquo;
+          </Link>
         </div>
       </div>
     </section>
-  );
+  )
 }
