@@ -1,105 +1,55 @@
 "use client"
-import { useEffect, useState } from "react"
+
+import { useContext, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
-import { redirect } from "next/navigation"
-import UserTabs from "../../components/layout/UserTabs"
+import { useRouter } from "next/navigation"
+import { CartContext, cartProductPrice } from "../../components/AppContext"
+import Image from "next/image"
+import AddressInputs from "../../components/layout/AddressInputs"
 import { useProfile } from "../../components/UseProfile"
-import toast from "react-hot-toast"
-import DeleteButton from "../../components/DeleteButton"
-import EditIcon from "../../components/icons/EditIcon"
-import Trash from "../../components/icons/Trash"
-import { Coffee, Utensils, ChefHat, Pizza } from "lucide-react"
+import { ShoppingCart, Trash2, CreditCard, ArrowRight } from "lucide-react"
+import Link from "next/link"
 
-export default function CategoriesPage() {
+export default function CartPage() {
   const { data: session, status } = useSession()
-  const { loading: profileLoading, data: profileData } = useProfile()
-  const [categoryName, setCategoryName] = useState("")
-  const [categories, setCategories] = useState([])
-  const [editedCategory, setEditedCategory] = useState(null)
+  const { cartProducts, removeCartProduct } = useContext(CartContext)
+  const [address, setAddress] = useState({})
+  const { data: profileData } = useProfile()
+  const [isClient, setIsClient] = useState(false)
+  const router = useRouter()
 
-  // Redirect to login if not authenticated
+  // Ensure we're on the client side
   useEffect(() => {
-    if (status === "unauthenticated") {
-      redirect("/login")
+    setIsClient(true)
+  }, [])
+
+  // Handle authentication redirect more safely
+  useEffect(() => {
+    if (isClient && status === "unauthenticated") {
+      router.push("/login")
     }
-  }, [status])
+  }, [status, isClient, router])
 
   useEffect(() => {
-    if (status === "authenticated") {
-      fetchCategories()
+    if (profileData?.city) {
+      const { phone, streetAddress, city, postalCode, country } = profileData
+      const addressFromProfile = {
+        phone,
+        streetAddress,
+        city,
+        postalCode,
+        country,
+      }
+      setAddress(addressFromProfile)
     }
-  }, [status])
+  }, [profileData])
 
-  function fetchCategories() {
-    fetch("/api/categories").then((res) => {
-      res.json().then((categories) => {
-        setCategories(categories)
-      })
-    })
-  }
-
-  async function handleCategorySubmit(ev) {
-    ev.preventDefault()
-    const creationPromise = new Promise(async (resolve, reject) => {
-      const data = { name: categoryName }
-      if (editedCategory) {
-        data._id = editedCategory._id
-      }
-      const response = await fetch("/api/categories", {
-        method: editedCategory ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-      setCategoryName("")
-      fetchCategories()
-      if (response.ok) resolve()
-      else reject()
-    })
-    await toast.promise(creationPromise, {
-      loading: editedCategory ? "Updating category..." : "Creating your new category...",
-      success: editedCategory ? "Category updated" : "Category created",
-      error: "Error, sorry...",
-    })
-  }
-
-  async function handleDeleteClick(_id) {
-    const promise = new Promise(async (resolve, reject) => {
-      const response = await fetch("/api/categories?_id=" + _id, {
-        method: "DELETE",
-      })
-      if (response.ok) {
-        resolve()
-      } else {
-        reject()
-      }
-    })
-
-    await toast.promise(promise, {
-      loading: "Deleting...",
-      success: "Deleted",
-      error: "Error",
-    })
-
-    fetchCategories()
-  }
-
-  // Function to get a random food icon
-  const getFoodIcon = (index) => {
-    const icons = [
-      <Pizza className="h-6 w-6" key="pizza" />,
-      <Coffee className="h-6 w-6" key="coffee" />,
-      <Utensils className="h-6 w-6" key="utensils" />,
-      <ChefHat className="h-6 w-6" key="chef" />,
-    ]
-    return icons[index % icons.length]
-  }
-
-  // Show loading while checking authentication or profile
-  if (status === "loading" || profileLoading) {
+  // Show loading while checking authentication or client-side hydration
+  if (!isClient || status === "loading") {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
@@ -111,143 +61,204 @@ export default function CategoriesPage() {
     return null
   }
 
-  // Check if user is admin
-  // if (!profileData?.admin) {
-  //   return (
-  //     <div className="min-h-[60vh] flex items-center justify-center">
-  //       <div className="text-center bg-white p-8 rounded-lg shadow-lg max-w-md">
-  //         <div className="bg-red-100 p-4 rounded-full inline-block mb-4">
-  //           <ChefHat className="h-8 w-8 text-red-600" />
-  //         </div>
-  //         <h2 className="text-2xl font-bold text-red-600 mb-2">Access Denied</h2>
-  //         <p className="text-gray-600 mb-4">You need admin privileges to access this page.</p>
-  //         <button
-  //           onClick={() => window.history.back()}
-  //           className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-  //         >
-  //           Go Back
-  //         </button>
-  //       </div>
-  //     </div>
-  //   )
-  // }
+  // Safe calculation with fallback
+  let subtotal = 0
+  if (cartProducts && Array.isArray(cartProducts)) {
+    for (const p of cartProducts) {
+      subtotal += cartProductPrice(p)
+    }
+  }
 
-  return (
-    <div className="min-h-screen bg-[#fcf9f2]">
-      <div
-        className="w-full h-48 bg-cover bg-center bg-green-700"
-        style={{
-          backgroundImage: "url('/placeholder.svg?height=300&width=1200')",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="w-full h-full flex items-center justify-center bg-black/40">
-          <h1 className="text-4xl font-bold  text-white font-serif">Menu Categories</h1>
+  const deliveryFee = 5.99
+  const total = subtotal + deliveryFee
+
+  function handleAddressChange(propName, value) {
+    setAddress((prevAddress) => ({ ...prevAddress, [propName]: value }))
+  }
+
+  if (!cartProducts?.length) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <div className="bg-gray-100 p-6 rounded-full inline-block mb-4">
+            <ShoppingCart size={64} className="text-gray-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-red-500 mb-2">Your cart is empty</h2>
+          <p className="text-gray-600 mb-6">Looks like you haven't added anything to your cart yet.</p>
+          <Link
+            href="/menu"
+            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-orange-500 hover:bg-orange-600 transition-colors"
+          >
+            Continue Shopping
+          </Link>
         </div>
       </div>
+    )
+  }
 
-      <section className="container max-w-4xl mx-auto px-4 py-8">
-        <UserTabs isAdmin={profileData?.admin} />
+  return (
+    <div className="py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-extrabold text-yellow-400 sm:text-4xl font-serif">Your Cart</h1>
+          <p className="mt-2 text-lg text-green-500">Review your items and checkout when you're ready</p>
+        </div>
 
-        <div className="mt-12 bg-white rounded-xl shadow-lg p-8 border border-amber-100">
-          <div className="flex items-center mb-6">
-            <ChefHat className="text-amber-600 mr-2 h-6 w-6" />
-            <h2 className="text-2xl font-serif font-bold text-amber-800">
-              {editedCategory ? "Edit Menu Category" : "Create New Menu Category"}
-            </h2>
-          </div>
-
-          <form className="mb-8" onSubmit={handleCategorySubmit}>
-            <div className="flex flex-col md:flex-row md:items-end gap-4">
-              <div className="grow">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {editedCategory && <span className="text-amber-600">Editing: {editedCategory.name}</span>}
-                  {!editedCategory && <span>Category Name</span>}
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 rounded-lg border border-amber-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 font-serif transition-all"
-                  value={categoryName}
-                  onChange={(ev) => setCategoryName(ev.target.value)}
-                  name="category"
-                  placeholder="e.g. Appetizers, Main Course, Desserts..."
-                />
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
+          {/* Cart Items */}
+          <section className="lg:col-span-7">
+            <div className="bg-white shadow-sm rounded-lg mb-8">
+              <div className="px-4 py-6 sm:px-6">
+                <h2 className="text-lg font-bold text-gray-900">Cart Items ({cartProducts.length})</h2>
               </div>
-              <div className="flex gap-2">
-                <button
-                  type="submit"
-                  className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-all font-medium flex items-center"
-                >
-                  {editedCategory ? "Update" : "Add Category"}
-                </button>
-                {editedCategory && (
-                  <button
-                    type="button"
-                    className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-all"
-                    onClick={() => {
-                      setEditedCategory(null)
-                      setCategoryName("")
-                    }}
-                  >
-                    Cancel
-                  </button>
-                )}
-              </div>
-            </div>
-          </form>
-
-          <div className="mt-12">
-            <h2 className="text-xl font-serif font-bold text-amber-800 mb-4 flex items-center">
-              <Utensils className="text-amber-600 mr-2 h-5 w-5" />
-              Current Menu Categories
-            </h2>
-
-            {categories?.length === 0 && (
-              <div className="text-center py-8 text-gray-500 italic">
-                No categories yet. Add your first menu category above.
-              </div>
-            )}
-
-            <div className="grid gap-4 md:grid-cols-2">
-              {categories?.length > 0 &&
-                categories.map((c, index) => (
-                  <div
-                    key={c._id}
-                    className="bg-gradient-to-r from-amber-50 to-amber-100 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-amber-200 group"
-                  >
-                    <div className="p-5 flex items-center justify-between">
-                      <div className="flex items-center">
-                        <div className="bg-amber-600 text-white p-2 rounded-full mr-3">{getFoodIcon(index)}</div>
-                        <h3 className="font-serif font-bold text-lg text-amber-900">{c.name}</h3>
+              <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+                <ul role="list" className="divide-y divide-gray-200">
+                  {cartProducts.map((product, index) => (
+                    <li key={`${product.name}-${index}`} className="py-6 flex">
+                      <div className="flex-shrink-0 w-24 h-24 rounded-md overflow-hidden border border-gray-200">
+                        <Image
+                          src={product.image || "/placeholder.svg"}
+                          width={200}
+                          height={200}
+                          alt={product.name || "Product"}
+                          className="w-full h-full object-center object-cover"
+                          priority={index < 3}
+                        />
                       </div>
 
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          className="p-2 text-amber-700 hover:text-amber-900 hover:bg-amber-200 rounded-full transition-colors"
-                          onClick={() => {
-                            setEditedCategory(c)
-                            setCategoryName(c.name)
-                          }}
-                          aria-label="Edit category"
-                        >
-                          <EditIcon />
-                        </button>
+                      <div className="ml-4 flex-1 flex flex-col">
                         <div>
-                          <DeleteButton
-                            label={<Trash />}
-                            onDelete={() => handleDeleteClick(c._id)}
-                            className="p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full transition-colors"
-                          />
+                          <div className="flex justify-between text-base font-medium text-gray-900">
+                            <h3 className="truncate pr-2">{product.name}</h3>
+                            <p className="ml-4 flex-shrink-0">${cartProductPrice(product).toFixed(2)}</p>
+                          </div>
+
+                          {product.size && <p className="mt-1 text-sm text-gray-500">Size: {product.size.name}</p>}
+                        </div>
+
+                        {product.extras?.length > 0 && (
+                          <div className="mt-2">
+                            <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wide">Extras:</h4>
+                            <ul className="mt-1 space-y-1">
+                              {product.extras.map((extra, i) => (
+                                <li key={`${extra.name}-${i}`} className="text-sm text-gray-500 flex justify-between">
+                                  <span className="truncate pr-2">{extra.name}</span>
+                                  <span className="flex-shrink-0">${extra.price.toFixed(2)}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        <div className="flex-1 flex items-end justify-between text-sm">
+                          <div className="flex items-center space-x-2"></div>
+
+                          <div className="flex">
+                            <button
+                              type="button"
+                              onClick={() => removeCartProduct(index)}
+                              className="font-medium text-orange-600 hover:text-orange-500 inline-flex items-center touch-manipulation"
+                            >
+                              <Trash2 size={16} className="mr-1" />
+                              Remove
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
+
+            <div className="bg-white shadow-sm rounded-lg p-6">
+              <h2 className="text-lg font-serif font-bold text-gray-900 mb-4">Order Notes</h2>
+              <textarea
+                rows={3}
+                className="shadow-sm block w-full focus:ring-orange-500 focus:border-orange-500 sm:text-sm border border-gray-300 rounded-md p-2 resize-none"
+                placeholder="Special instructions for your order..."
+              />
+            </div>
+          </section>
+
+          {/* Order Summary */}
+          <section className="mt-16 lg:mt-0 lg:col-span-5">
+            <div className="bg-white shadow-sm rounded-lg divide-y divide-gray-200">
+              <div className="p-6">
+                <h2 className="text-lg font-medium text-gray-900 mb-4">Order Summary</h2>
+                <dl className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <dt className="text-sm text-gray-600">Subtotal</dt>
+                    <dd className="text-sm font-medium text-gray-900">${subtotal.toFixed(2)}</dd>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <dt className="text-sm text-gray-600">Delivery Fee</dt>
+                    <dd className="text-sm font-medium text-gray-900">${deliveryFee.toFixed(2)}</dd>
+                  </div>
+                  <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                    <dt className="text-base font-medium text-gray-900">Order Total</dt>
+                    <dd className="text-base font-medium text-gray-900">${total.toFixed(2)}</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div className="p-6">
+                <h2 className="text-lg font-medium text-gray-900 mb-4">Delivery Information</h2>
+                <AddressInputs addressProps={address} setAddressProps={handleAddressChange} />
+              </div>
+
+              <div className="p-6">
+                <h2 className="text-lg font-medium text-gray-900 mb-4">Payment Method</h2>
+                <div className="space-y-3">
+                  <div className="relative flex items-center p-4 border border-gray-300 rounded-lg bg-white shadow-sm cursor-pointer hover:border-orange-500 transition-colors touch-manipulation">
+                    <input
+                      id="payment-card"
+                      name="payment-method"
+                      type="radio"
+                      className="h-4 w-4 text-orange-600 border-gray-300 focus:ring-orange-500"
+                      defaultChecked
+                    />
+                    <label htmlFor="payment-card" className="ml-3 flex flex-col cursor-pointer">
+                      <span className="block text-sm font-medium text-gray-900">Credit Card</span>
+                      <span className="block text-sm text-gray-500">Pay with your credit card</span>
+                    </label>
+                    <CreditCard className="ml-auto h-5 w-5 text-gray-400" />
+                  </div>
+
+                  <div className="relative flex items-center p-4 border border-gray-300 rounded-lg bg-white shadow-sm cursor-pointer hover:border-orange-500 transition-colors touch-manipulation">
+                    <input
+                      id="payment-cash"
+                      name="payment-method"
+                      type="radio"
+                      className="h-4 w-4 text-orange-600 border-gray-300 focus:ring-orange-500"
+                    />
+                    <label htmlFor="payment-cash" className="ml-3 flex flex-col cursor-pointer">
+                      <span className="block text-sm font-medium text-gray-900">Cash on Delivery</span>
+                      <span className="block text-sm text-gray-500">Pay when your order arrives</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6">
+                <button
+                  type="submit"
+                  className="w-full bg-orange-500 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors flex items-center justify-center touch-manipulation"
+                >
+                  Complete Order
+                  <ArrowRight size={16} className="ml-2" />
+                </button>
+                <p className="mt-4 text-center text-sm text-gray-500">
+                  By placing your order, you agree to our{" "}
+                  <a href="#" className="font-medium text-orange-600 hover:text-orange-500">
+                    Terms and Conditions
+                  </a>
+                </p>
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
+      </div>
     </div>
   )
 }
