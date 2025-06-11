@@ -3,16 +3,32 @@
 import { signIn } from "next-auth/react"
 import Image from "next/image"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loginInProgress, setLoginInProgress] = useState(false)
+  const [error, setError] = useState("")
+  const router = useRouter()
 
   async function handleFormSubmit(ev) {
     ev.preventDefault()
     setLoginInProgress(true)
-    await signIn("credentials", { email, password, callbackUrl: "/" })
+    setError("") // Clear previous errors
+
+    const result = await signIn("credentials", {
+      username: email,
+      password,
+      redirect: false, // This prevents automatic redirect
+    })
+
+    if (result?.error) {
+      setError("Invalid email or password. Please try again.")
+    } else if (result?.ok) {
+      router.push("/") // Navigate to home page
+    }
+
     setLoginInProgress(false)
   }
 
@@ -20,6 +36,7 @@ export default function LoginPage() {
     <section className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <h1 className="text-center text-gray-800 font-bold text-3xl">Welcome Back ! 😊</h1>
+        {error && <div className="p-4 bg-red-100 text-red-800 rounded-lg text-center">{error}</div>}
         <form onSubmit={handleFormSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
