@@ -21,8 +21,7 @@ Welcome to **Aahar**, a modern food ordering web app built with **Next.js 14**, 
 - **Framework**: [Next.js 14](https://nextjs.org/)
 - **Styling**: Tailwind CSS
 - **Authentication**: next-auth
-- **Database**: MongoDB + Mongoose
-- **Image Uploads**: EditableImage component with file input
+- **Database**: MongoDB
 - **Hosting**: [Render](https://render.com) / Vercel / any Node.js-compatible platform
 
 ---
